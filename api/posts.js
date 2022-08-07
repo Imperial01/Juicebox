@@ -7,13 +7,30 @@ const { getPostById } = require('../db')
 const { requireUser } = require('./utils')
 
 
+postsRouter.get('/', async (req, res) => {
+
+    const posts = await getAllPosts();
+    console.log(posts)
+    res.send({
+        posts
+    });
+});
+
 postsRouter.get('/', async (req, res, next) => {
     try {
       const allPosts = await getAllPosts();
-        const posts = allPosts.filter(post => {
-            return post.active || (req.user && post.author.id === req.user.id);
-      });
+      const posts = allPosts.filter(post => {
+        if (post.active) {
+          return true;
+        }
       
+        if (req.user && post.author.id === req.user.id) {
+          return true;
+        }
+
+        return false;
+      });
+
       res.send({
         posts
       });
@@ -21,7 +38,6 @@ postsRouter.get('/', async (req, res, next) => {
       next({ name, message });
     }
   });
-           
 
 
 postsRouter.post('/', requireUser, async (req , res, next) => {
