@@ -7,14 +7,6 @@ const { getPostById } = require('../db')
 const { requireUser } = require('./utils')
 
 
-postsRouter.get('/', async (req, res) => {
-
-    const posts = await getAllPosts();
-    console.log(posts)
-    res.send({
-        posts
-    });
-});
 
 postsRouter.get('/', async (req, res, next) => {
     try {
